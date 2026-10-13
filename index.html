@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#04060d">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Pixel Arena</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- MENU -->
+  <section id="menu" class="screen active">
+    <div class="hero">
+      <div class="badge">ARENA ONLINE &middot; 2 A 4 JOGADORES</div>
+      <h1 class="logo" data-text="Pixel Arena"><span>Pixel</span><em>Arena</em></h1>
+      <p class="sub">Escolha seu lutador e vença o melhor de 3 rounds. Jogue no computador, no celular ou no tablet &mdash; todos juntos na mesma sala.</p>
+      <div class="menu-btns">
+        <button class="btn big" id="btnOnline"><b>Modo Online</b><small>Salas &middot; qualquer aparelho</small></button>
+        <button class="btn big alt" id="btnLocal"><b>Modo Local</b><small>Mesma tela &middot; com CPU opcional</small></button>
+        <button class="btn ghost" id="btnHow">Como jogar</button>
+      </div>
+      <div id="how" class="panel how hidden">
+        <h3>Controles</h3>
+        <table id="howTable"></table>
+        <p><b>Celular/tablet:</b> use o direcional (arraste para os lados, pule para cima, defenda para baixo) e os botões <b>Soco</b>, <b>Chute</b> e <b>Especial</b>. Gire o aparelho para a horizontal para uma tela maior.</p>
+        <p>O <b>chute</b> tem mais alcance e dano; o <b>especial</b> lança uma bola de energia e tem tempo de recarga; segurar <b>defender</b> reduz o dano.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODO LOCAL -->
+  <section id="local" class="screen">
+    <h2 class="title">Modo Local</h2>
+    <p class="hint">Cada vaga pode ser uma pessoa, a CPU ou ficar desligada. Ligue pelo menos 2 vagas.</p>
+    <div id="slots" class="slots"></div>
+    <div class="row">
+      <button class="btn" id="localBack">Voltar</button>
+      <button class="btn primary" id="localStart">Lutar</button>
+    </div>
+  </section>
+
+  <!-- MODO ONLINE -->
+  <section id="online" class="screen">
+    <h2 class="title">Modo Online</h2>
+    <label class="field">Seu apelido
+      <input id="inName" maxlength="10" placeholder="Ex.: DAVI" autocomplete="off" autocapitalize="characters">
+    </label>
+    <div class="two">
+      <div class="panel">
+        <h3>Criar sala</h3>
+        <p>Você vira o anfitrião e recebe um código de 5 caracteres para passar aos amigos.</p>
+        <button id="btnCreate" class="btn primary">Criar sala</button>
+      </div>
+      <div class="panel">
+        <h3>Entrar em uma sala</h3>
+        <p>Digite o código que o anfitrião te passou.</p>
+        <input id="inCode" maxlength="5" placeholder="CÓDIGO" autocomplete="off" autocapitalize="characters" class="code-in">
+        <button id="btnJoin" class="btn primary">Entrar</button>
+      </div>
+    </div>
+    <p id="onlineMsg" class="msg"></p>
+    <div class="row"><button class="btn" id="onlineBack">Voltar</button></div>
+  </section>
+
+  <!-- SALA / LOBBY -->
+  <section id="lobby" class="screen">
+    <div class="lobby-head">
+      <h2 class="title">Sala <span id="roomCode" class="roomcode"></span></h2>
+      <button id="btnCopy" class="btn small">Compartilhar link</button>
+    </div>
+    <div class="lobby-body">
+      <div class="panel">
+        <h3>Jogadores (<span id="plCount">1</span>/4)</h3>
+        <ul id="plList" class="pl"></ul>
+      </div>
+      <div class="panel">
+        <h3>Escolha seu lutador</h3>
+        <div id="charGrid" class="grid"></div>
+      </div>
+    </div>
+    <p id="lobbyMsg" class="msg"></p>
+    <div class="row">
+      <button class="btn" id="lobbyLeave">Sair da sala</button>
+      <button class="btn primary" id="lobbyStart">Iniciar luta</button>
+    </div>
+  </section>
+
+  <!-- JOGO -->
+  <section id="game" class="screen">
+    <div id="stage">
+      <canvas id="cv" width="960" height="540"></canvas>
+      <button id="btnPause" class="hudbtn" aria-label="Menu">&#9776;</button>
+      <button id="btnMute" class="hudbtn" aria-label="Som">&#9834;</button>
+      <button id="btnTouch" class="hudbtn" aria-label="Controles de toque">&#9995;</button>
+      <button id="btnFs" class="hudbtn" aria-label="Tela cheia">&#9974;</button>
+
+      <div id="overlay" class="overlay hidden">
+        <h2 id="ovTitle"></h2>
+        <p id="ovSub"></p>
+        <div id="ovBtns" class="ov-btns"></div>
+      </div>
+    </div>
+
+    <div id="touch" class="touch hidden">
+      <div class="pad" id="pad" aria-label="Direcional">
+        <i class="ar up">&#9650;</i><i class="ar dn">&#9660;</i><i class="ar lf">&#9664;</i><i class="ar rt">&#9654;</i>
+        <div class="knob" id="knob"></div>
+      </div>
+      <div class="abtns">
+        <button data-a="s" class="tb ab a3">Especial</button>
+        <button data-a="k" class="tb ab a2">Chute</button>
+        <button data-a="p" class="tb ab a1">Soco</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+<div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script>window.Peer || document.write('<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"><\/script>');</script>
+<script src="js/data.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/fx.js"></script>
+<script src="js/render.js"></script>
+<script src="js/net.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
